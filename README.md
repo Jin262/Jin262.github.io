@@ -80,6 +80,31 @@ pnpm -v   # 12.15.0
 | `pnpm preview` | 빌드 결과 미리보기 |
 | `pnpm scrap <url> [태그 ...]` | 스크랩 초안 YAML과 썸네일 생성 |
 
+## 디자인 바꾸기
+
+[getdesign.md](https://getdesign.md/)에서 실제 웹사이트의 디자인을 정리한 `DESIGN.md`를 받아, Claude Code 같은 AI 코딩 도구에 디자인 기준으로 줄 수 있습니다. `DESIGN.md`에는 색, 글꼴, 간격, 컴포넌트와 그렇게 정한 이유가 들어 있습니다.
+
+1. [getdesign.md/design-md](https://getdesign.md/design-md) 목록에서 마음에 드는 디자인을 골라 `DESIGN.md` 내용을 복사합니다.
+2. 저장소 루트에 `DESIGN.md` 파일로 저장합니다.
+3. Claude Code에 이렇게 요청합니다.
+
+   ```text
+   DESIGN.md를 기준으로 블로그 디자인을 바꿔줘. UI를 고치기 전에 DESIGN.md를 먼저 읽어.
+   ```
+
+이 블로그의 디자인 값은 주로 아래 파일에 모여 있어서, 이 파일들부터 고치게 하면 됩니다.
+
+| 무엇 | 위치 |
+|---|---|
+| 색, 글꼴 변수, 본문 폭과 여백 | `src/styles/global.css`의 `:root` |
+| 글꼴 종류(Pretendard, Geist Mono) | `astro.config.mjs`의 `fonts` |
+| 코드 블록 색 | `src/lib/shiki-theme.mjs` |
+| 페이지별 배치 | `src/pages/`, `src/layouts/`의 `<style>` |
+
+바꾼 뒤에는 `pnpm dev`로 데스크톱과 휴대폰 폭에서 화면을 확인하고, `pnpm build`가 통과하는지 봅니다.
+
+> getdesign.md의 파일은 해당 회사가 공식으로 낸 디자인 시스템이 아닙니다. 사이트는 학습과 개발에 쓰는 출발점으로 소개하며, 상표와 디자인 요소의 권리는 각 소유자에게 있습니다. 특정 회사의 사이트처럼 보이도록 그대로 베끼기보다는 참고 자료로 쓰는 편이 안전합니다.
+
 ## Claude Code 스킬
 
 저장소 폴더에서 [Claude Code](https://claude.com/claude-code)를 실행하면 `.claude/skills/`의 스킬을 바로 쓸 수 있습니다.
