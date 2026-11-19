@@ -15,10 +15,42 @@
 | Claude Code 스킬 | `.claude/skills/` |
 | 글쓰기 스킬의 근거 자료(한국 기술 블로그 124편 분석) | `docs/references/` |
 
+## 준비: Node.js와 pnpm 설치
+
+이 블로그는 Node.js 22.23.4 이상(`package.json`의 `engines`)과 pnpm 12.15.0(`package.json`의 `packageManager`)으로 빌드합니다. GitHub Actions의 배포는 Node.js 24로 빌드하므로 로컬에도 Node.js 24 LTS를 권장합니다.
+
+### 1. Node.js
+
+[nodejs.org](https://nodejs.org/ko/download)에서 **LTS** 설치 파일을 받아 설치합니다. 명령어로 설치하려면 다음 중 하나를 씁니다.
+
+| OS | 명령어 |
+|---|---|
+| Windows | `winget install OpenJS.NodeJS.LTS` |
+| macOS ([Homebrew](https://brew.sh)) | `brew install node@24` |
+| Linux, macOS (버전 관리 도구) | [nvm](https://github.com/nvm-sh/nvm) 설치 후 `nvm install 24` |
+
+설치한 뒤 터미널을 새로 열고 버전을 확인합니다.
+
+```bash
+node -v   # v24.x.x 또는 v22.23.4 이상
+npm -v
+```
+
+### 2. pnpm
+
+Node.js와 함께 설치되는 npm으로 이 저장소와 같은 버전의 pnpm을 설치합니다.
+
+```bash
+npm install -g pnpm@12.15.0
+pnpm -v   # 12.15.0
+```
+
+> macOS·Linux에서 `npm install -g`가 권한 오류(`EACCES`)를 내면 `sudo`를 붙이지 말고 nvm으로 Node.js를 설치한 뒤 다시 실행합니다. nvm으로 설치한 Node.js는 전역 설치에 관리자 권한이 필요 없습니다.
+
 ## 시작하기
 
 1. 이 저장소를 fork하거나 **Use this template**으로 복사합니다. 저장소 이름을 `<내 아이디>.github.io`로 하면 `https://<내 아이디>.github.io`에서 열립니다.
-2. 의존성을 설치합니다. Node.js 22 이상과 pnpm이 필요합니다.
+2. 의존성을 설치하고 개발 서버를 띄웁니다. Node.js와 pnpm이 없으면 먼저 [준비](#준비-nodejs와-pnpm-설치)를 따라 설치합니다.
 
    ```bash
    pnpm install
