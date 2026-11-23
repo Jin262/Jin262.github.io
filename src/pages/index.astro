@@ -35,7 +35,7 @@ const series = await getAllSeries(allPosts);
 				<div class="intro">
 					<p class="label">{HOME_INTRO.label}</p>
 					<h1>{HOME_INTRO.title.map((line, i) => (i === 0 ? line : <><br />{line}</>))}</h1>
-					<p class="lead">{HOME_INTRO.lead}</p>
+					<p style="white-space: pre-line;">{HOME_INTRO.lead}</p>
 					<div class="btn-row">
 						<a class="btn btn-primary" href="/blog/">블로그 읽기</a>
 						<a class="btn btn-secondary" href="/about/">소개 더 보기</a>

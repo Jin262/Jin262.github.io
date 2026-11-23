@@ -26,7 +26,11 @@ import { Content, frontmatter } from '../content/about.mdx';
 			<aside class="profile" aria-label="프로필">
 				<div class="profile-card">
 					<div class="who">
-						<span class="initial" aria-hidden="true">{PROFILE.initial}</span>
+						{PROFILE.avatar ? (
+							<img class="avatar avatar-photo" src={PROFILE.avatar} alt="" width="48" height="48" />
+						) : (
+							<span class="avatar initial" aria-hidden="true">{PROFILE.initial}</span>
+						)}
 						<span class="who-text">
 							<span class="name">{PROFILE.name}</span>
 							<span class="role">{PROFILE.role}</span>
@@ -161,14 +165,19 @@ import { Content, frontmatter } from '../content/about.mdx';
 		align-items: center;
 		gap: 14px;
 	}
-	.initial {
-		display: flex;
+	.avatar {
 		flex: 0 0 48px;
-		align-items: center;
-		justify-content: center;
 		width: 48px;
 		height: 48px;
 		border-radius: 9999px;
+	}
+	.avatar-photo {
+		object-fit: cover;
+	}
+	.initial {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		background: var(--c-text-strong);
 		box-shadow: inset 0 0 0 3px var(--c-accent);
 		color: var(--c-bg);

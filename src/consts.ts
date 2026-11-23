@@ -1,26 +1,28 @@
 // 사이트 전체에서 쓰는 상수. 블로그를 시작할 때 이 파일의 값을 자기 것으로 바꾼다.
 // 사이트 주소는 astro.config.mjs의 `site`에서 바꾼다.
 
-export const SITE_TITLE = '내 블로그';
+export const SITE_TITLE = '개발 로그';
 export const SITE_DESCRIPTION = '공부하고 만든 것을 기록하는 블로그';
 
 // 홈 첫 화면 문구
 export const HOME_INTRO = {
 	label: '공부 기록 · 개발 노트',
 	// 줄바꿈 위치는 배열로 나눈다
-	title: ['배운 것을', '코드와 함께 기록합니다'],
-	lead: '여기에 블로그를 소개하는 두세 문장을 쓴다. 누가, 무엇을, 왜 기록하는지 적으면 된다.',
+	title: ['어, 이게', '왜 되지...?'],
+	lead: '제 데스크톱을 졸업작품의 첫 서버로 쓴 개발자, 박성진입니다.\n직접 만든 서비스를 서버에 올려 돌려 보는 일에 재미를 느꼈고, 지금은 AI 에이전트 엔지니어 과정에서 배운 걸 하나씩 직접 만들어보고 있습니다. 그러다 만나는 ‘어, 이게 왜 되지?’ 싶은 순간과 답을 찾아가며 배운 것들을 여기에 남깁니다.',
 };
 
 // 소개 페이지 프로필 칸. 본문은 src/content/about.mdx에 쓴다.
 export const PROFILE = {
-	// 동그란 아바타에 보이는 글자 하나
-	initial: 'B',
-	name: '이름',
+	// public/에 넣은 사진의 주소. 예: '/profile.jpg'
+	avatar: '/images/Ddong_i.jpg',
+	// 사진 주소가 비어 있을 때 표시하는 글자
+	initial: 'P',
+	name: '박성진',
 	role: '한 줄 소개',
 	// 요약 표. 필요 없으면 빈 배열로 둔다.
 	summary: [
-		{ term: '경력', desc: '20XX년부터 개발' },
+		// { term: '경력', desc: '20XX년부터 개발' },
 		{ term: '관심사', desc: '관심 있는 분야' },
 	],
 };

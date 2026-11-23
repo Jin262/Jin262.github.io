@@ -1,7 +1,9 @@
 ---
 // 블로그 목록(/blog/)과 카테고리 페이지(/blog/category/…/)가 함께 쓰는 화면.
 // 두 화면은 탭 선택 상태와 제목 영역만 다르다.
+import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import FallbackImage from '../assets/blog-placeholder-1.jpg';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -143,6 +145,9 @@ const pageDescription = isAll ? BLOG_DESCRIPTION : `${title} 카테고리의 글
 											</div>
 											<h2>{post.data.title}</h2>
 											<p class="summary">{post.data.description}</p>
+										</div>
+										<div class="thumbnail">
+											<Image src={post.data.heroImage ?? FallbackImage} width={156} densities={[1, 2]} alt="" />
 										</div>
 									</a>
 								</li>
@@ -323,8 +328,9 @@ const pageDescription = isAll ? BLOG_DESCRIPTION : `${title} 카테고리의 글
 	}
 	.post-list a {
 		display: flex;
+		align-items: center;
 		gap: 8px 24px;
-		padding: 24px 0;
+		padding: 18px 0;
 		border-bottom: 1px solid var(--c-divider);
 		color: var(--c-text-strong);
 		text-decoration: none;
@@ -337,7 +343,6 @@ const pageDescription = isAll ? BLOG_DESCRIPTION : `${title} 카테고리의 글
 	}
 	.post-list :global(.date) {
 		flex: 0 0 96px;
-		padding-top: 3px;
 		font-size: 13px;
 		color: var(--c-text-muted);
 	}
@@ -347,6 +352,21 @@ const pageDescription = isAll ? BLOG_DESCRIPTION : `${title} 카테고리의 글
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
+	}
+	.thumbnail {
+		flex: 0 0 auto;
+		width: 156px;
+		aspect-ratio: 3 / 2;
+		overflow: hidden;
+		border: 1px solid var(--c-divider);
+		border-radius: 10px;
+		background: var(--c-surface);
+	}
+	.thumbnail :global(img) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
 	}
 	.meta {
 		display: flex;
@@ -368,6 +388,11 @@ const pageDescription = isAll ? BLOG_DESCRIPTION : `${title} 카테고리의 글
 	}
 	.summary {
 		margin: 0;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+		overflow-wrap: anywhere;
 		font-size: 14px;
 		line-height: 1.65;
 		color: var(--c-text-muted);
@@ -432,7 +457,11 @@ const pageDescription = isAll ? BLOG_DESCRIPTION : `${title} 카테고리의 글
 		}
 		/* 메타를 "꼬리표 · 시리즈 · 날짜" 한 줄로 모은다 */
 		.post-list a {
+			gap: 12px;
 			padding: 20px 0;
+		}
+		.thumbnail {
+			width: 96px;
 		}
 		.post-list :global(.date) {
 			display: none;

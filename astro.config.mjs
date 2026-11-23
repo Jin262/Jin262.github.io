@@ -31,7 +31,7 @@ const pretendardVariants = pretendardWeights.flatMap(([name, weight]) =>
 // https://astro.build/config
 export default defineConfig({
 	// 블로그 주소. GitHub Pages 기본 주소면 'https://<아이디>.github.io', 개인 도메인이면 그 주소를 쓴다.
-	site: 'https://example.github.io',
+	site: 'https://Jin262.github.io',
 	integrations: [mdx(), sitemap()],
 	markdown: {
 		processor: satteri({ hastPlugins: [tableWrap, externalLinks, calloutBoxes] }),
@@ -48,6 +48,7 @@ export default defineConfig({
 			name: 'Pretendard',
 			cssVariable: '--font-sans',
 			fallbacks: ['-apple-system', 'Segoe UI', 'sans-serif'],
+			// @ts-ignore
 			options: { variants: pretendardVariants },
 		},
 		{
