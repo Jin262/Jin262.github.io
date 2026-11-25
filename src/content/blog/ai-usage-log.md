@@ -23,3 +23,11 @@ heroImage: '../../assets/cover-ai-usage-log.webp'
 **문제:** 번호 목록으로 값을 꺼내면 복사본이 생긴다는 설명만 두면, 같은 인덱싱으로 원본에 값을 대입할 때도 복사본만 바뀐다고 이해할 수 있었다.
 
 **해결:** AI가 NumPy 공식 문서와 실행 결과를 대조했다. 번호 목록으로 읽은 복사본을 수정했을 때 원본의 두 번째 행은 `[5 6 7 8]`로 남았다. `table[1, [0, 1]]`을 대입문 왼쪽에 직접 썼을 때는 같은 행의 앞 두 값이 `99`와 `100`으로 바뀌었다. 두 결과를 비교하는 예제를 본문과 노트북에 넣었다. [NumPy 복사본과 뷰](https://numpy.org/doc/2.4/user/basics.copies.html#indexing-operations)
+
+## 2026년 11월 25일 · NumPy 5편
+
+### 배열의 `sort()`와 `argsort()`가 반환하는 값
+
+**문제:** 강의 자료에서 배열의 `sort()`가 정렬할 인덱스를 반환한다고 설명했다. 이 설명을 따르면 `sort()`의 반환값을 학생의 이름과 점수표를 함께 옮기는 데 쓸 수 있다고 이해하기 쉽다.
+
+**해결:** AI에 `sort()`와 `argsort()`의 반환값과 원본이 바뀌는지 확인해 달라고 요청했다. 공식 문서와 실행 결과를 대조해 배열의 `sort()`는 원본을 정렬하고 `None`을 반환하며, `np.argsort()`는 정렬에 쓸 위치를 반환함을 확인했다. 본문에서는 원본을 바꾸는 호출을 비교표에 두고, 학생의 이름과 점수에 같은 위치를 적용하는 예제에는 `np.argsort()`를 썼다. [NumPy.ndarray.sort](https://numpy.org/doc/2.4/reference/generated/numpy.ndarray.sort.html) · [NumPy.argsort](https://numpy.org/doc/2.4/reference/generated/numpy.argsort.html)
