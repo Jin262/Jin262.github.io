@@ -4,18 +4,41 @@ import type { MarkdownHeading } from 'astro';
 
 interface Props {
 	headings: MarkdownHeading[];
-	// side: PC 오른쪽 칸(라벨 포함), compact: 접힌 메뉴 안(라벨 없음, 큰 글자)
+	// side는 PC 오른쪽 칸, compact는 좁은 화면의 목차다.
 	variant?: 'side' | 'compact';
+	groupByTopic?: boolean;
 }
 
-const { headings, variant = 'side' } = Astro.props;
+const { headings, variant = 'side', groupByTopic = false } = Astro.props;
+const topics: { heading: MarkdownHeading; entries: MarkdownHeading[] }[] = [];
+if (groupByTopic) {
+	for (const heading of headings) {
+		if (heading.depth === 2) topics.push({ heading, entries: [] });
+		else topics.at(-1)?.entries.push(heading);
+	}
+}
 ---
 
 <nav class:list={['toc', variant]} aria-label="이 글의 목차">
-	{variant === 'side' && <p class="eyebrow">이 글의 목차</p>}
+	<p class="eyebrow">이 글의 목차</p>
 	<ol>
 		{
-			headings.map((h) => (
+			groupByTopic ? topics.map(({ heading, entries }) => (
+				<li>
+					<details class="toc-topic">
+						<summary data-toc-link={heading.slug}>{heading.text}</summary>
+						<ol>
+							{entries.map((entry) => (
+								<li>
+									<a href={`#${entry.slug}`} class:list={[`depth-${entry.depth - 1}`]} data-toc-link={entry.slug}>
+										{entry.text}
+									</a>
+								</li>
+							))}
+						</ol>
+					</details>
+				</li>
+			)) : headings.map((h) => (
 				<li>
 					<a href={`#${h.slug}`} class:list={[`depth-${h.depth}`]} data-toc-link={h.slug}>
 						{h.text}
@@ -55,11 +78,6 @@ const { headings, variant = 'side' } = Astro.props;
 	a:hover {
 		color: var(--c-text-strong);
 	}
-	a.active {
-		border-left-color: var(--c-accent);
-		color: var(--c-text-strong);
-		font-weight: 500;
-	}
 	.compact ol {
 		gap: 0;
 		padding: 0 16px 12px;
@@ -73,5 +91,62 @@ const { headings, variant = 'side' } = Astro.props;
 	.compact a.depth-3 {
 		padding-left: 24px;
 		font-size: 14px;
+	}
+	.compact .eyebrow {
+		margin: 16px 16px 4px;
+	}
+	.toc-topic > summary {
+		width: fit-content;
+		padding: 4px 0 4px 12px;
+		border-left: 2px solid var(--c-divider);
+		color: var(--c-text-muted);
+		cursor: pointer;
+		list-style: none;
+	}
+	.toc-topic > summary::-webkit-details-marker {
+		display: none;
+	}
+	.toc-topic > ol {
+		padding: 0 0 4px 8px;
+	}
+	.toc-topic a:not(.active),
+	.toc-topic > summary {
+		font-size: 12px;
+		line-height: 1.5;
+	}
+	:is(a, .toc-topic > summary) {
+		position: relative;
+		transition: color 180ms ease-out, font-size 180ms ease-out;
+	}
+	:is(a, .toc-topic > summary)::before {
+		position: absolute;
+		inset-block: 0;
+		left: -2px;
+		width: 3px;
+		border-radius: 2px;
+		background: var(--c-accent);
+		content: '';
+		pointer-events: none;
+		opacity: 0;
+		transform: scaleY(0.5);
+		transition: opacity 160ms ease-out, transform 180ms ease-out;
+	}
+	:is(a, .toc-topic > summary).active,
+	.toc-topic:not([open]):has(a.active) > summary {
+		border-left-color: var(--c-divider);
+		color: var(--c-text-strong);
+		font-size: 15px;
+		font-weight: 600;
+	}
+	:is(a, .toc-topic > summary).active::before,
+	.toc-topic:not([open]):has(a.active) > summary::before {
+		opacity: 1;
+		transform: scaleY(1);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		:is(a, .toc-topic > summary),
+		:is(a, .toc-topic > summary)::before {
+			transition: none;
+		}
 	}
 </style>

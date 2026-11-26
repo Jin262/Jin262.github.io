@@ -1,8 +1,8 @@
-url: "https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/"
-title: "A practical guide to building agents"
-source: "OpenAI"
-image: "../../assets/links/2026-11-20-openai-com-a-practical-guide-to-building-ai-agents.webp"
-summary: "첫 AI 에이전트에 필요한 모델·도구·지시문과 사람에게 판단을 넘기는 기준을 설명한다."
-comment: "첫 에이전트를 만들 때 어떤 도구를 연결하고, 어느 단계에서 사람의 확인을 받아야 할지 기준을 잡으려고 저장했다."
-tags: ["ai", "agent"]
-date: 2026-11-20T16:35:47+09:00
+url: "https://code.claude.com/docs/en/best-practices"
+title: "Best practices for Claude Code"
+source: "Anthropic"
+image: "../../assets/links/2026-11-25-Claude-Code-Docs.png"
+summary: "클로드 코드의 한계를 보완하기 위해 맥락과 검증 수단을 제공하고, 예외 없는 규칙은 시스템 차원에서 강제하는 모범 사례를 정리한다."
+comment: "CLAUDE.md는 가이드라인을 위한 것이며, 클로드는 가이드라인이 적용되지 않는다고 스스로 판단할 수 있다고 한다."
+tags: ["ai", "claude-code"]
+date: 2026-11-25T17:35:03+09:00

@@ -25,7 +25,7 @@ source: "사이트 이름"                    # 사람이 읽는 이름 (GitHub,
 image: "../../assets/links/<파일명>.webp" # 카드 썸네일. 없으면 줄을 뺀다
 imageSource: "https://example.com/og.png" # 썸네일을 만든 원본 og:image
 summary: "한국어 요약 60자 이내 1~2문장."
-comment: "왜 골랐는지 한 줄"              # 사용자가 준 것만
+comment: "왜 골랐는지 간단하게"              # 사용자가 준 것만
 tags: ["ai", "agent"]
 date: 2026-10-29T15:20:00+09:00         # 스크랩한 시각, 한국 시간 (원문 발행일 아님). 목록 정렬 기준
 ```

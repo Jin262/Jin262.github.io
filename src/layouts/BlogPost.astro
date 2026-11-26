@@ -25,6 +25,7 @@ interface Props {
 }
 
 const { post, series, neighbors, headings } = Astro.props;
+const groupTocByTopic = post.id === 'ai-usage-log';
 const { title, description, category, pubDate, updatedDate, heroImage, env, notebook, seriesOrder } = post.data;
 const neighborIds = [neighbors.prev, neighbors.next].flatMap((n) => (n.kind === 'post' ? [n.post.id] : []));
 ---
@@ -72,9 +73,8 @@ const neighborIds = [neighbors.prev, neighbors.next].flatMap((n) => (n.kind === 
 				</header>
 
 				{
-					(series || headings.length > 0) && (
-						<div class="menu-box">
-							{series && (
+					series && (
+						<div class="menu-box series-box">
 								<details class="series-menu">
 									<summary>
 										<span class="summary-title">{series.title} 시리즈</span>
@@ -85,20 +85,14 @@ const neighborIds = [neighbors.prev, neighbors.next].flatMap((n) => (n.kind === 
 									</summary>
 									<SeriesNav series={series} current={seriesOrder!} variant="compact" />
 								</details>
-							)}
-							{headings.length > 0 && (
-								<details class="toc-menu">
-									<summary>
-										<span class="summary-title">이 글의 목차</span>
-										<span class="mono summary-count">{headings.length}</span>
-										<Icon name="chevron-down" size={16} class="chev" />
-									</summary>
-									<Toc headings={headings} variant="compact" />
-								</details>
-							)}
 						</div>
 					)
 				}
+				{headings.length > 0 && (
+					<div class="menu-box post-toc-menu">
+						<Toc headings={headings} variant="compact" groupByTopic={groupTocByTopic} />
+					</div>
+				)}
 
 				{
 					notebook && (
@@ -129,7 +123,7 @@ const neighborIds = [neighbors.prev, neighbors.next].flatMap((n) => (n.kind === 
 				headings.length > 0 && (
 					<aside class="toc-col">
 						<div class="sticky">
-							<Toc headings={headings} />
+							<Toc headings={headings} groupByTopic={groupTocByTopic} />
 						</div>
 					</aside>
 				)
@@ -139,20 +133,24 @@ const neighborIds = [neighbors.prev, neighbors.next].flatMap((n) => (n.kind === 
 
 		<script>
 			// 목차의 현재 절 표시: 화면 위쪽 기준선을 지난 마지막 제목을 현재 절로 본다
-			const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')];
+			const links = [...document.querySelectorAll<HTMLElement>('[data-toc-link]')];
 			const slugs = [...new Set(links.map((a) => a.dataset.tocLink!))];
 			const targets = slugs.map((s) => document.getElementById(s)).filter((el): el is HTMLElement => el !== null);
+			const tocMenu = document.querySelector<HTMLElement>('.post-toc-menu');
+			const usageLogGroups = document.querySelectorAll<HTMLDetailsElement>('.usage-log-group');
 			let current: string | undefined;
 			const update = () => {
-				const line = 120;
+				const menu = tocMenu?.getBoundingClientRect();
+				const line = menu?.height && menu.top <= 12 ? Math.max(120, menu.bottom + 24) : 120;
 				let active = targets[0]?.id;
 				for (const el of targets) {
+					if (el.closest('.usage-log-group:not([open])') && !el.closest('summary')) continue;
 					if (el.getBoundingClientRect().top <= line) active = el.id;
 					else break;
 				}
 				// 끝까지 내리면 마지막 절들은 기준선에 닿지 못하므로 마지막 절을 현재 절로 본다
-				if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) {
-					active = targets[targets.length - 1].id;
+				if (!usageLogGroups.length && innerHeight + scrollY >= document.documentElement.scrollHeight - 2) {
+					active = targets.at(-1)?.id;
 				}
 				if (active === current) return;
 				current = active;
@@ -174,6 +172,12 @@ const neighborIds = [neighbors.prev, neighbors.next].flatMap((n) => (n.kind === 
 				);
 				update();
 			}
+			if (tocMenu) {
+				new ResizeObserver(() => {
+					tocMenu.parentElement?.style.setProperty('--post-toc-offset', `${tocMenu.offsetHeight + 24}px`);
+					update();
+				}).observe(tocMenu);
+			}
 			// 코드 블록 복사 버튼
 			document.addEventListener('click', async (event) => {
 				const button = (event.target as Element | null)?.closest<HTMLButtonElement>('[data-copy]');
@@ -187,9 +191,24 @@ const neighborIds = [neighbors.prev, neighbors.next].flatMap((n) => (n.kind === 
 				}
 				setTimeout(() => (button.textContent = '복사'), 1500);
 			});
-			// 접힌 목차에서 항목을 고르면 메뉴를 닫는다
-			for (const a of document.querySelectorAll<HTMLAnchorElement>('.toc-menu a')) {
-				a.addEventListener('click', () => a.closest('details')?.removeAttribute('open'));
+			// AI 사용 기록의 링크는 대상 기록을 펼친 뒤 이동한다.
+			for (const a of links) {
+				if (!(a instanceof HTMLAnchorElement)) continue;
+				a.addEventListener('click', () => {
+					const group = document.getElementById(a.dataset.tocLink!)?.closest<HTMLDetailsElement>('.usage-log-group');
+					if (group) group.open = true;
+				});
+			}
+			for (const group of usageLogGroups) {
+				group.addEventListener('toggle', update);
+				const summary = group.querySelector('summary');
+				const close = group.querySelector<HTMLButtonElement>('.usage-log-close');
+				if (!summary || !close) continue;
+				close.addEventListener('click', () => {
+					group.open = false;
+					summary.focus();
+				});
+				close.hidden = false;
 			}
 		</script>
 	</body>
@@ -215,6 +234,25 @@ const neighborIds = [neighbors.prev, neighbors.next].flatMap((n) => (n.kind === 
 		gap: 28px;
 		max-height: calc(100vh - 48px);
 		overflow-y: auto;
+	}
+	.toc-col {
+		align-self: stretch;
+	}
+	.post-toc-menu {
+		position: sticky;
+		top: 8px;
+		z-index: 2;
+		max-height: 45dvh;
+		overflow-y: auto;
+		background: var(--c-bg);
+	}
+	.post-toc-menu ~ .prose :global(:is(h2, h3, h4)) {
+		scroll-margin-top: var(--post-toc-offset, 24px);
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		:global(html:has(.post-toc-menu)) {
+			scroll-behavior: smooth;
+		}
 	}
 	.main-col {
 		min-width: 0;
@@ -325,9 +363,6 @@ const neighborIds = [neighbors.prev, neighbors.next].flatMap((n) => (n.kind === 
 		border: 1px solid var(--c-border);
 		border-radius: 12px;
 	}
-	.menu-box details + details {
-		border-top: 1px solid var(--c-border);
-	}
 	summary {
 		display: flex;
 		align-items: center;
@@ -377,14 +412,8 @@ const neighborIds = [neighbors.prev, neighbors.next].flatMap((n) => (n.kind === 
 		.toc-col {
 			display: none;
 		}
-		.menu-box {
+		.post-toc-menu {
 			display: block;
-		}
-		.series-menu {
-			display: none;
-		}
-		.series-menu + .toc-menu {
-			border-top: none;
 		}
 	}
 	/* 960px 이하에서는 한 칸 */
@@ -395,11 +424,8 @@ const neighborIds = [neighbors.prev, neighbors.next].flatMap((n) => (n.kind === 
 		.left-col {
 			display: none;
 		}
-		.series-menu {
+		.series-box {
 			display: block;
-		}
-		.series-menu + .toc-menu {
-			border-top: 1px solid var(--c-border);
 		}
 	}
 	@media (max-width: 720px) {

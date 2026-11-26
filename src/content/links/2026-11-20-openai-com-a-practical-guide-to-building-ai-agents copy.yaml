@@ -1,0 +1,8 @@
+url: "https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/"
+title: "A practical guide to building agents"
+source: "OpenAI"
+image: "../../assets/links/2026-11-20-openai-com-a-practical-guide-to-building-ai-agents.webp"
+summary: "첫 AI 에이전트에 필요한 모델·도구·지시문과 사람에게 판단을 넘기는 기준을 설명한다."
+comment: "첫 에이전트를 만들 때 어떤 도구를 연결하고, 어느 단계에서 사람의 확인을 받아야 할지 기준을 잡으려고 저장했다."
+tags: ["ai", "agent"]
+date: 2026-11-20T16:35:47+09:00

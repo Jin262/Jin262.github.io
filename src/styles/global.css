@@ -128,6 +128,57 @@ p {
 	margin-top: 1.8em;
 	margin-bottom: 0.5em;
 }
+.prose .usage-log-group {
+	margin-block: 1.5em;
+	padding-inline: clamp(16px, 4vw, 28px);
+	border: 1px solid var(--c-border);
+	border-radius: 12px;
+}
+.usage-log-group > summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding-block: 14px;
+	font-weight: 600;
+	color: var(--c-text-strong);
+	cursor: pointer;
+}
+.usage-log-group > summary::-webkit-details-marker {
+	display: none;
+}
+.usage-log-group > summary::after {
+	content: '▾' / '';
+}
+.usage-log-group[open] > summary {
+	border-bottom: 1px solid var(--c-divider);
+}
+.usage-log-group[open] > summary::after {
+	content: '▴' / '';
+}
+.prose .usage-log-group > summary > h2 {
+	margin: 0;
+	font: inherit;
+}
+.prose .usage-log-group > h3:first-of-type {
+	margin-top: 1.1em;
+}
+.prose .usage-log-group > h4 {
+	margin-top: 1.2em;
+}
+.usage-log-close {
+	margin: 0 0 16px auto;
+	padding: 6px 12px;
+	font: inherit;
+	color: var(--c-text);
+	background: var(--c-surface);
+	border: 1px solid var(--c-border);
+	border-radius: 8px;
+	cursor: pointer;
+}
+.usage-log-close:not([hidden]) {
+	display: block;
+}
 .prose a {
 	color: var(--c-text-strong);
 	text-decoration-line: underline;
